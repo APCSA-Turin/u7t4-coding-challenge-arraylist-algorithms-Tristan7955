@@ -1,6 +1,7 @@
 package com.example.project;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class Main{
     
@@ -15,7 +16,12 @@ public class Main{
     *  @param str String to insert
     */
     public static ArrayList<String> insertAfterI(ArrayList<String> stringList, String str){
-       return new ArrayList<String>();
+        for (int i = 0; i < stringList.size(); i++) {
+            if (stringList.get(i).contains("i")) {
+                stringList.add(i+1, str);
+            }
+        }
+       return stringList;
     }
 
 
@@ -28,6 +34,12 @@ public class Main{
    *  @param stringList  original arraylist of Strings
    */
     public static ArrayList<String> removeThree(ArrayList<String> stringList){
+        for (String string : stringList) {
+            if (string.length() == 3) {
+                stringList.remove(string);
+            }
+        }
+
         return stringList;
     }
 
@@ -41,9 +53,13 @@ public class Main{
    *  @param intList  original array of integers
    */
     public static ArrayList<Integer> reverseArray(int[] intList){
-        return new ArrayList<Integer>();
-    }
+        ArrayList<Integer> array = new ArrayList<Integer>();
+        for (int i = intList.length-1; i >= 0; i--) {
+            array.add(intList[i]);
+        }     
 
+        return array;
+    }
 
 
     /** Appends an uppercase version of each string to the end of wordList;
@@ -59,6 +75,10 @@ public class Main{
      *  @param wordList  arraylist of Strings
      */
     public static ArrayList<String> duplicateUpperEnd(ArrayList<String> wordList){
+        for (String string : wordList) {
+            wordList.add(string.toUpperCase());
+        }
+        
         return wordList;
     }
 
@@ -78,7 +98,14 @@ public class Main{
    */
 
     public static ArrayList<String> parseSentence(String sentence){
-        return new ArrayList<String>();
+        String[] split = sentence.split(" ");
+        ArrayList<String> array = new ArrayList<String>();
+
+        for (int i = 0; i < split.length; i++) {
+            array.add(split[i]);
+        }
+
+        return array;
     }
 
 
@@ -99,6 +126,14 @@ public class Main{
    *  @param wordList  arraylist of words
    */
     public static ArrayList<String> moveBWords(ArrayList<String> wordList){
+        for (int i = wordList.size(); i >= 0; i--) {
+            if (wordList.get(i).startsWith("b")) {
+                String temp = wordList.get(i);
+                
+                wordList.remove(i);
+                wordList.set(0, temp);
+            }
+        }
         return wordList;
     }
 
@@ -114,6 +149,14 @@ public class Main{
      *  @param intList  intList of Integers
      */
     public static ArrayList<Integer> removeDuplicates(ArrayList<Integer> intList){
+        ArrayList<Integer> tempArray = new ArrayList<Integer>();
+
+        for (int i : intList) {
+            if (!tempArray.contains(i)) tempArray.add(i);
+        }
+
+        intList = tempArray;
+
         return intList;
     }
 
@@ -125,7 +168,15 @@ public class Main{
     // sameFirstLast([1, 2, 1]) → true
     //sameFirstLast([]) -> false
     public static boolean sameFirstLast(ArrayList<Integer> list){
-        return false;
+
+        if (list.size() == 0) return false;
+
+        if (list.get(0) == list.get(list.size()-1)) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 
@@ -136,7 +187,11 @@ public class Main{
     // swapEnds([1, 2, 3]) → [3, 2, 1]
     // swapEnds([8, 6, 7, 9, 5]) → [5, 6, 7, 9, 8]
     // swapEnds([]->[])
-    public static ArrayList<Integer> swapEnds(ArrayList<Integer> list){        
+    public static ArrayList<Integer> swapEnds(ArrayList<Integer> list){ 
+        int tempInt = list.get(0);
+
+        list.set(0, list.size()-1);
+        list.set(list.size()-1, tempInt);
         return list;
     }
 
@@ -150,6 +205,14 @@ public class Main{
     // zeroFront([0, 1, 1, 0, 1]) → [0, 0, 1, 1, 1]
     // zeroFront([1, 0]) → [0, 1]
     public static ArrayList<Integer> zeroFront(ArrayList<Integer> list){
+        for (int num : list) {
+            if (num != 0) {
+                int temp = num;
+                list.remove(num);
+                list.add(temp);
+            }
+        }
+        
         return list;
     }
 
@@ -189,6 +252,9 @@ public class Main{
     // fix34([3, 2, 2, 4]) → [3, 4, 2, 2]
 
     public static ArrayList<Integer> fix34(ArrayList<Integer> list){
+        for (int num : list) {
+            
+        }
         return list;
     }
 
@@ -219,6 +285,11 @@ public class Main{
    *  @param numList  numList of ints
    */
     public static ArrayList<Integer> modes(int[] numList){
+        ArrayList<Integer> modeList = new ArrayList<Integer>();
+
+        for (int num : numList) {
+            
+        }
         return new ArrayList<Integer>();
     }
 }
