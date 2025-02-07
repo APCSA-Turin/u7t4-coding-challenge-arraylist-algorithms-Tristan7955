@@ -2,6 +2,7 @@ package com.example.project;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class Main{
     
@@ -34,15 +35,14 @@ public class Main{
    *  @param stringList  original arraylist of Strings
    */
     public static ArrayList<String> removeThree(ArrayList<String> stringList){
-        for (String string : stringList) {
-            if (string.length() == 3) {
-                stringList.remove(string);
+        Iterator<String> it = stringList.iterator();
+        while (it.hasNext()) {
+            if (it.next().length() == 3) {
+                it.remove();
             }
         }
-
         return stringList;
     }
-
 
 
     /** Returns an ArrayList with all elements of arr reversed
@@ -75,8 +75,9 @@ public class Main{
      *  @param wordList  arraylist of Strings
      */
     public static ArrayList<String> duplicateUpperEnd(ArrayList<String> wordList){
-        for (String string : wordList) {
-            wordList.add(string.toUpperCase());
+        int size = wordList.size();
+        for (int i = 0; i < size; i++) {
+            wordList.add(wordList.get(i).toUpperCase());
         }
         
         return wordList;
@@ -125,16 +126,20 @@ public class Main{
    *
    *  @param wordList  arraylist of words
    */
-    public static ArrayList<String> moveBWords(ArrayList<String> wordList){
-        for (int i = wordList.size(); i >= 0; i--) {
-            if (wordList.get(i).startsWith("b")) {
-                String temp = wordList.get(i);
-                
-                wordList.remove(i);
-                wordList.set(0, temp);
+    public static ArrayList<String> moveBWords(ArrayList<String> wordList) {
+        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> nonBWords = new ArrayList<>();
+    
+        for (String word : wordList) {
+            if (word.toLowerCase().startsWith("b")) {
+                result.add(word);
+            } else {
+                nonBWords.add(word);
             }
         }
-        return wordList;
+    
+        result.addAll(nonBWords);
+        return result;
     }
 
 
@@ -187,14 +192,14 @@ public class Main{
     // swapEnds([1, 2, 3]) → [3, 2, 1]
     // swapEnds([8, 6, 7, 9, 5]) → [5, 6, 7, 9, 8]
     // swapEnds([]->[])
-    public static ArrayList<Integer> swapEnds(ArrayList<Integer> list){ 
-        int tempInt = list.get(0);
-
-        list.set(0, list.size()-1);
-        list.set(list.size()-1, tempInt);
+    public static ArrayList<Integer> swapEnds(ArrayList<Integer> list) {
+        if (list.size() > 1) {
+            int tempInt = list.get(0);
+            list.set(0, list.get(list.size() - 1));
+            list.set(list.size() - 1, tempInt);
+        }
         return list;
     }
-
 
 
     // Return an array that contains the exact same numbers as the given array, 
@@ -204,16 +209,21 @@ public class Main{
     // zeroFront([1, 0, 0, 1]) → [0, 0, 1, 1]
     // zeroFront([0, 1, 1, 0, 1]) → [0, 0, 1, 1, 1]
     // zeroFront([1, 0]) → [0, 1]
-    public static ArrayList<Integer> zeroFront(ArrayList<Integer> list){
+    public static ArrayList<Integer> zeroFront(ArrayList<Integer> list) {
+        ArrayList<Integer> result = new ArrayList<>();
+        int zeroCount = 0;
         for (int num : list) {
-            if (num != 0) {
-                int temp = num;
-                list.remove(num);
-                list.add(temp);
+            if (num == 0) {
+                result.add(0);
+                zeroCount++;
             }
         }
-        
-        return list;
+        for (int num : list) {
+            if (num != 0) {
+                result.add(num);
+            }
+        }
+        return result;
     }
 
 
@@ -225,8 +235,24 @@ public class Main{
     // notAlone([1, 2, 3], 2) → [1, 3, 3]
     // notAlone([1, 2, 3, 2, 5, 2], 2) → [1, 3, 3, 5, 5, 5]
     // notAlone([3, 4], 3) → [4,4]
-    public static ArrayList<Integer> notAlone(ArrayList<Integer> list, int val){
-        return list;
+    public static ArrayList<Integer> notAlone(ArrayList<Integer> list, int val) {
+        ArrayList<Integer> result = new ArrayList<>(list);
+
+        for (int i = 1; i < list.size() - 1; i++) {
+            if (list.get(i) == val && list.get(i - 1) != list.get(i) && list.get(i + 1) != list.get(i)) {
+                result.set(i, Math.max(list.get(i - 1), list.get(i + 1)));
+            }
+        }
+
+        if (list.get(0) == val && list.get(1) > list.get(0)) {
+            result.set(0, list.get(1));
+        }
+
+        if (list.get(list.size()-1) == val && list.get(list.size() -2) > list.get(list.size() -1)) {
+            result.set(result.size() - 1, list.get(list.size() - 2));
+        }
+
+        return result; 
     }
 
 
@@ -237,7 +263,11 @@ public class Main{
     // shiftLeft([1, 2]) → [2, 1]
     // shiftLeft([1]) → [1]
 
-    public static ArrayList<Integer> shiftLeft(ArrayList<Integer> list){
+    public static ArrayList<Integer> shiftLeft(ArrayList<Integer> list) {
+        if (list.size() > 1) {
+            int first = list.remove(0);
+            list.add(first);
+        }
         return list;
     }
     
@@ -251,13 +281,23 @@ public class Main{
     // fix34([1, 3, 1, 4, 4, 3, 1]) → [1, 3, 4, 1, 1, 3, 4]
     // fix34([3, 2, 2, 4]) → [3, 4, 2, 2]
 
-    public static ArrayList<Integer> fix34(ArrayList<Integer> list){
-        for (int num : list) {
-            
+    public static ArrayList<Integer> fix34(ArrayList<Integer> list) {
+        ArrayList<Integer> threes = new ArrayList<>();
+        ArrayList<Integer> fours = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == 3) {
+                threes.add(i);
+            } else if (list.get(i) == 4) {
+                fours.add(i);
+            }
+        }
+
+        for (int i = 0; i < threes.size(); i++) {
+            list.set(fours.get(i), list.get(threes.get(i) + 1));
+            list.set(threes.get(i) + 1, 4);
         }
         return list;
     }
-
 
 
     /** Returns an arraylist of Integers that contain all mode(s) of the array numList.
@@ -284,12 +324,48 @@ public class Main{
    *
    *  @param numList  numList of ints
    */
-    public static ArrayList<Integer> modes(int[] numList){
-        ArrayList<Integer> modeList = new ArrayList<Integer>();
-
-        for (int num : numList) {
-            
-        }
-        return new ArrayList<Integer>();
-    }
+  public static ArrayList<Integer> modes(int[] numList) {
+      ArrayList<Integer> uniqueElements = new ArrayList<>();
+      ArrayList<Integer> frequencies = new ArrayList<>();
+      
+      for (int num : numList) {
+          if (!uniqueElements.contains(num)) {
+              uniqueElements.add(num);
+              frequencies.add(1);
+          } else {
+              int index = uniqueElements.indexOf(num);
+              frequencies.set(index, frequencies.get(index) + 1);
+          }
+      }
+      
+      int maxFrequency = 0;
+      for (int frequency : frequencies) {
+          if (frequency > maxFrequency) {
+              maxFrequency = frequency;
+          }
+      }
+      
+      ArrayList<Integer> modesList = new ArrayList<>();
+      
+      boolean allSameFrequency = true;
+      for (int frequency : frequencies) {
+          if (frequency != maxFrequency) {
+              allSameFrequency = false;
+              break;
+          }
+      }
+      
+      if (allSameFrequency) {
+          return modesList;
+      }
+      
+      for (int i = 0; i < frequencies.size(); i++) {
+          if (frequencies.get(i) == maxFrequency) {
+              modesList.add(uniqueElements.get(i));
+          }
+      }
+      
+      return modesList;
+  }
+  
 }
